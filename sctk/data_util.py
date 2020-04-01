@@ -31,7 +31,8 @@ def get_trade_date(start_date):
 # code：指数代码
 # trade_date：交易日期
 def get_index_stocks(code, trade_date):
-    if code == '000001.XSHG':
+    # 通过深证综指399106.XSHE来观察全市场数据
+    if code == '399106.XSHE':
         stocks = list(jqdatasdk.get_all_securities(date=trade_date).index)
     else:
         stocks = jqdatasdk.get_index_stocks(code, trade_date)
