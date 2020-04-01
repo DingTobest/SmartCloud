@@ -78,19 +78,31 @@ def call_index_analysis_info_result():
             pe_ttm_percentage_10y_color = ''
             pb_ttm_percentage_color = ''
             if pe_ttm_percentage_10y != '' and float(pe_ttm_percentage_10y[:-1]) > 60:
-                color_str = '#cc9999'
+                if float(pe_ttm_percentage_10y[:-1]) > 90:
+                    color_str = '#4169E1'
+                else:
+                    color_str = '#87CEEB'
                 pe_ttm_percentage_10y_color = color_str
                 pe_ttm_now_color = color_str
             elif pe_ttm_percentage_10y != '' and float(pe_ttm_percentage_10y[:-1]) < 30:
-                color_str = '#ffcc00'
+                if float(pe_ttm_percentage_10y[:-1]) < 10:
+                    color_str = '#00FF00'
+                else:
+                    color_str = '#87CEEB'
                 pe_ttm_percentage_10y_color = color_str
                 pe_ttm_now_color = color_str
             elif pe_ttm_percentage != '' and float(pe_ttm_percentage[:-1]) > 60:
-                color_str = '#cc9999'
+                if float(pe_ttm_percentage[:-1]) > 90:
+                    color_str = '#4169E1'
+                else:
+                    color_str = '#87CEEB'
                 pb_ttm_percentage_color = color_str
                 pe_ttm_now_color = color_str
             elif pe_ttm_percentage != '' and float(pe_ttm_percentage[:-1]) < 30:
-                color_str = '#ffcc00'
+                if float(pe_ttm_percentage[:-1]) < 10:
+                    color_str = '#00FF00'
+                else:
+                    color_str = '#87CEEB'
                 pb_ttm_percentage_color = color_str
                 pe_ttm_now_color = color_str
 
