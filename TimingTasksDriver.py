@@ -51,7 +51,12 @@ def call_index_analysis_info_result():
 
         html = ""
 
+        # 用于存储转化后的数据对象
+        last_update_date = ""
+        index_analysis_list = []
+
         for index_info in resutl['index_info_list']:
+            index_info_dict = {}
             info = index_info['fields']
 
             # 拼装返回html的字段
@@ -106,6 +111,8 @@ def call_index_analysis_info_result():
                 pb_ttm_percentage_color = color_str
                 pe_ttm_now_color = color_str
 
+            last_update_date = analysis_info['last_analysis_date']
+
             pb_ttm_now = analysis_info['pb_ttm_now']
             pb_ttm_percentage = analysis_info['pb_ttm_percentage']
             pb_ttm_percentage_5y = analysis_info['pb_ttm_percentage_5y']
@@ -116,6 +123,33 @@ def call_index_analysis_info_result():
             ps_ttm_percentage_5y = analysis_info['ps_ttm_percentage_5y']
             ps_ttm_percentage_10y = analysis_info['ps_ttm_percentage_10y']
 
+            # 用于生成数据存储的json数据
+            index_info_dict['index_code'] = info['index_code']
+            index_info_dict['index_data_table'] = info['index_data_table']
+            index_info_dict['index_name'] = index_name
+            index_info_dict['start_date'] = start_date
+
+            index_info_dict['history_max_pe'] = history_max_pe
+            index_info_dict['history_min_pe'] = history_min_pe
+            index_info_dict['pe_ttm_now'] = pe_ttm_now
+            index_info_dict['pe_ttm_percentage'] = pe_ttm_percentage
+            index_info_dict['pe_ttm_percentage_5y'] = pe_ttm_percentage_5y
+            index_info_dict['pe_ttm_percentage_10y'] = pe_ttm_percentage_10y
+
+            index_info_dict['pb_ttm_now'] = pb_ttm_now
+            index_info_dict['pb_ttm_percentage'] = pb_ttm_percentage
+            index_info_dict['pb_ttm_percentage_5y'] = pb_ttm_percentage_5y
+            index_info_dict['pb_ttm_percentage_10y'] = pb_ttm_percentage_10y
+
+            index_info_dict['ps_ttm_now'] = ps_ttm_now
+            index_info_dict['ps_ttm_percentage'] = ps_ttm_percentage
+            index_info_dict['ps_ttm_percentage_5y'] = ps_ttm_percentage_5y
+            index_info_dict['ps_ttm_percentage_10y'] = ps_ttm_percentage_10y
+
+            index_analysis_list.append(index_info_dict)
+
+
+            # 用于生成邮件返回的html信息
             # html += html_template % (index_name, start_date, history_max_pe, history_min_pe, pe_ttm_now, pe_ttm_percentage_5y, pe_ttm_percentage_10y, pe_ttm_percentage, pb_ttm_now, pb_ttm_percentage_5y, pb_ttm_percentage_10y, pb_ttm_percentage, ps_ttm_now, ps_ttm_percentage_5y, ps_ttm_percentage_10y, ps_ttm_percentage)
 
             temp_html = "<tr>"
@@ -148,6 +182,19 @@ def call_index_analysis_info_result():
 
             html += temp_html
 
+        # 生成数据存储的json文件
+        index_data_dict = {'last_update_date': last_update_date, 'index_analysis_list' : index_analysis_list}
+        # index_analysis_json = json.dumps(index_data_dict, ensure_ascii=False)
+        json_file_path = sys.path[0] + '\\index-analysis-data.json'
+        print(json_file_path)
+        if os.path.exists(json_file_path):
+            os.remove(json_file_path)
+            print('删除历史文件index-analysis-data.json')
+
+        with open(json_file_path, 'w', encoding='utf-8') as f:
+            f.write(json.dumps(index_data_dict, ensure_ascii=False, indent=4))
+
+        # 生成邮件发送的html文件
         print(html)
         print(sys.path[0] + '\\email-template.html')
         f = open(sys.path[0] + '\\email-template.html', 'r', encoding='utf-8')

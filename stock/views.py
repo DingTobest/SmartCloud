@@ -7,6 +7,7 @@ from stock.models import index_info
 from stock.index_analysis_service import index_analysis
 import datetime
 import json
+import sys
 
 # Create your views here.
 
@@ -77,3 +78,10 @@ def get_index_analysis_info(request):
         response['msg'] = 'faild'
         response['error_num'] = 1
     return JsonResponse(response)
+
+@require_http_methods(["GET"])
+def get_all_index_analysis_data(request):
+    config_file_path = sys.path[0] + '\\index-analysis-data.json'
+    config = open(config_file_path, encoding='utf-8')
+    index_analysis_info = json.load(config)
+    return JsonResponse(index_analysis_info)
