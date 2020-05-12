@@ -1,13 +1,14 @@
-from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse
-from django.shortcuts import render
-from django.core import serializers
-
-from stock.models import index_info
-from stock.index_analysis_service import index_analysis
 import datetime
 import json
 import sys
+
+from django.core import serializers
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+
+from stock.index_analysis_service import index_analysis
+from stock.model.index_info_model import index_info
+
 
 # Create your views here.
 

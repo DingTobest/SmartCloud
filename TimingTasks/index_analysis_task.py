@@ -16,6 +16,7 @@ from stock import index_info_service
 from stock.index_analysis_service import index_analysis
 from sctk import data_util
 from sctk import index_fundamental_analysis
+from django.conf import settings
 
 # 计算指数相关的定时任务
 def calc_index_analysis_info():
@@ -23,7 +24,13 @@ def calc_index_analysis_info():
 
     data_util.data_service_init()
 
-    engine = create_engine('mysql+pymysql://root:root@127.0.0.1/sc_stock?charset=utf8')
+    db_name = settings.DATABASES['default']['NAME']
+    host = settings.DATABASES['default']['HOST']
+    user = settings.DATABASES['default']['USER']
+    password = settings.DATABASES['default']['PASSWORD']
+
+    connect_str = 'mysql+pymysql://' + user + ':' + password + '@' + host + '/' + db_name + '?charset=utf8'
+    engine = create_engine(connect_str)
     for index_info in index_infos:
         print('当前进行计算的指数：' + index_info.index_code)
         indexAnalysis = index_analysis(index_info.index_data_table)
@@ -75,4 +82,8 @@ def calc_index_analysis_info():
     return 'success'
 
 if __name__ == '__main__':
-    calc_index_analysis_info()
+    print(settings.DATABASES['default']['NAME'])
+    print(settings.DATABASES['default']['HOST'])
+    print(settings.DATABASES['default']['PORT'])
+    print(settings.DATABASES['default']['USER'])
+    print(settings.DATABASES['default']['PASSWORD'])

@@ -3,7 +3,7 @@
 # @Author  : Dingzh.tobest
 # 文件描述  ：
 
-from stock.models import index_info
+from stock.model.index_info_model import index_info
 
 def get_all_index_info():
     return index_info.objects.all()

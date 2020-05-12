@@ -1,7 +1,10 @@
-from django.test import TestCase
-from stock.models import index_info
-from stock import index_info_service
 import datetime
+
+from django.test import TestCase
+
+from stock import index_info_service
+from stock.model.index_info_model import index_info
+
 
 # Create your tests here.
 class stock(TestCase):
