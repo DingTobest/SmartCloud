@@ -26,7 +26,7 @@ def get_index_stocks_from_cis(code, name):
 
     f.close()
 
-    df = pd.read_excel(file_path)
+    df = pd.read_excel(file_path, converters = {'成分券代码Constituent Code': str})
     df['sys_code'] = df['成分券代码Constituent Code'].map(str) + '.' + df['交易所Exchange']
     index_stocks_str = ','.join(list(df['sys_code']))
     index_stocks_str = index_stocks_str.replace('.SHH', '.XSHG')
