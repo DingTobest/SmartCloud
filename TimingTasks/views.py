@@ -45,7 +45,7 @@ def download_index_stocks(request):
             analysis_date_list = analysis_date_list[:-1]
 
         if len(analysis_date_list) == 0:
-            break
+            continue
 
         print('当前处理的指数为：' + index_info.index_code)
         data_record_task_service.get_index_stocks_from_cis(index_info.index_code, index_info.index_name)
