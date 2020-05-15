@@ -10,6 +10,7 @@ class index_info(models.Model):
     index_data_fund = models.CharField(max_length=32)
     start_date = models.DateField(null=False)
     last_update_date = models.DateField(null=False)
+    data_source = models.CharField(max_length=32)
 
     class Meta:  # 元信息类
         db_table = 'index_info'  # 自定义表的名字

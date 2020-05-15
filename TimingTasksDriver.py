@@ -32,15 +32,57 @@ html_template = """
     <td>%s</td>
 </tr>"""
 
+COLOR_VERY_LOW = '#00FF00'
+COLOR_LOW = '#F0E68C'
+COLOR_HIGH = '#87CEEB'
+COLOR_VERY_HIGH = '#FF4500'
+
 # 调用每日计算函数
 def call_calc_index_analysis_info():
     addr = host_address + '/timingtask/calc_index_analysis_info'
-    r = requests.get(addr)
+    r = requests.post(addr)
     if r.status_code == 200:
         resutl = json.loads(r.text)
         print(resutl['result'])
     else:
         raise Exception('更新每日数据接口【call_calc_index_analysis_info】调用失败')
+
+def get_color(ttm_5y, ttm_10y, ttm_history):
+    ttm_now_color = ''
+    ttm_percentage_10y_color = ''
+    ttm_percentage_history_color = ''
+    if ttm_10y != '' and float(ttm_10y[:-1]) > 60:
+        if float(ttm_10y[:-1]) > 90:
+            color_str = COLOR_VERY_HIGH
+        else:
+            color_str = COLOR_HIGH
+        ttm_percentage_10y_color = color_str
+        ttm_now_color = color_str
+    elif ttm_10y != '' and float(ttm_10y[:-1]) < 30:
+        if float(ttm_10y[:-1]) < 10:
+            color_str = COLOR_VERY_LOW
+        else:
+            color_str = COLOR_LOW
+        ttm_percentage_10y_color = color_str
+        ttm_now_color = color_str
+    elif ttm_history != '' and ttm_5y != '' and ttm_10y == '' and float(
+            ttm_history[:-1]) > 60:
+        if float(ttm_history[:-1]) > 90:
+            color_str = COLOR_VERY_HIGH
+        else:
+            color_str = COLOR_HIGH
+        ttm_percentage_history_color = color_str
+        ttm_now_color = color_str
+    elif ttm_history != '' and ttm_5y != '' and ttm_10y == '' and float(
+            ttm_history[:-1]) < 30:
+        if float(ttm_history[:-1]) < 10:
+            color_str = COLOR_VERY_LOW
+        else:
+            color_str = COLOR_LOW
+        ttm_percentage_history_color = color_str
+        ttm_now_color = color_str
+
+    return ttm_now_color, ttm_percentage_10y_color, ttm_percentage_history_color
 
 # 调用全部指数的计算结果，生成html结果文件
 def call_index_analysis_info_result():
@@ -79,37 +121,7 @@ def call_index_analysis_info_result():
             pe_ttm_percentage_5y = analysis_info['pe_ttm_percentage_5y']
             pe_ttm_percentage_10y = analysis_info['pe_ttm_percentage_10y']
 
-            pe_ttm_now_color = ''
-            pe_ttm_percentage_10y_color = ''
-            pb_ttm_percentage_color = ''
-            if pe_ttm_percentage_10y != '' and float(pe_ttm_percentage_10y[:-1]) > 60:
-                if float(pe_ttm_percentage_10y[:-1]) > 90:
-                    color_str = '#FFCC00'
-                else:
-                    color_str = '#87CEEB'
-                pe_ttm_percentage_10y_color = color_str
-                pe_ttm_now_color = color_str
-            elif pe_ttm_percentage_10y != '' and float(pe_ttm_percentage_10y[:-1]) < 30:
-                if float(pe_ttm_percentage_10y[:-1]) < 10:
-                    color_str = '#00FF00'
-                else:
-                    color_str = '#F0E68C'
-                pe_ttm_percentage_10y_color = color_str
-                pe_ttm_now_color = color_str
-            elif pe_ttm_percentage != '' and pe_ttm_percentage_10y == '' and float(pe_ttm_percentage[:-1]) > 60:
-                if float(pe_ttm_percentage[:-1]) > 90:
-                    color_str = '#FFCC00'
-                else:
-                    color_str = '#87CEEB'
-                pb_ttm_percentage_color = color_str
-                pe_ttm_now_color = color_str
-            elif pe_ttm_percentage != '' and pe_ttm_percentage_10y == '' and float(pe_ttm_percentage[:-1]) < 30:
-                if float(pe_ttm_percentage[:-1]) < 10:
-                    color_str = '#00FF00'
-                else:
-                    color_str = '#F0E68C'
-                pb_ttm_percentage_color = color_str
-                pe_ttm_now_color = color_str
+            pe_ttm_now_color, pe_ttm_percentage_10y_color, pe_ttm_percentage_color = get_color(pe_ttm_percentage_5y, pe_ttm_percentage_10y, pe_ttm_percentage)
 
             last_update_date = analysis_info['last_analysis_date']
 
@@ -117,6 +129,8 @@ def call_index_analysis_info_result():
             pb_ttm_percentage = analysis_info['pb_ttm_percentage']
             pb_ttm_percentage_5y = analysis_info['pb_ttm_percentage_5y']
             pb_ttm_percentage_10y = analysis_info['pb_ttm_percentage_10y']
+
+            pb_ttm_now_color, pb_ttm_percentage_10y_color, pb_ttm_percentage_color = get_color(pb_ttm_percentage_5y, pb_ttm_percentage_10y, pb_ttm_percentage)
 
             ps_ttm_now = analysis_info['ps_ttm_now']
             ps_ttm_percentage = analysis_info['ps_ttm_percentage']
@@ -150,8 +164,6 @@ def call_index_analysis_info_result():
 
 
             # 用于生成邮件返回的html信息
-            # html += html_template % (index_name, start_date, history_max_pe, history_min_pe, pe_ttm_now, pe_ttm_percentage_5y, pe_ttm_percentage_10y, pe_ttm_percentage, pb_ttm_now, pb_ttm_percentage_5y, pb_ttm_percentage_10y, pb_ttm_percentage, ps_ttm_now, ps_ttm_percentage_5y, ps_ttm_percentage_10y, ps_ttm_percentage)
-
             temp_html = "<tr>"
             temp_html += "<td>%s</td>" % index_name
             temp_html += "<td>%s</td>" % start_date
@@ -166,14 +178,25 @@ def call_index_analysis_info_result():
                 temp_html += "<td>%s</td>" % pe_ttm_percentage_10y
             else:
                 temp_html += "<td bgcolor=\"%s\">%s</td>" % (pe_ttm_percentage_10y_color, pe_ttm_percentage_10y)
-            if pb_ttm_percentage_color == '':
+            if pe_ttm_percentage_color == '':
                 temp_html += "<td>%s</td>" % pe_ttm_percentage
             else:
-                temp_html += "<td bgcolor=\"%s\">%s</td>" % (pb_ttm_percentage_color, pe_ttm_percentage)
-            temp_html += "<td>%.2f</td>" % pb_ttm_now
+                temp_html += "<td bgcolor=\"%s\">%s</td>" % (pe_ttm_percentage_color, pe_ttm_percentage)
+
+            if pb_ttm_now_color == '':
+                temp_html += "<td>%.2f</td>" % pb_ttm_now
+            else:
+                temp_html += "<td bgcolor=\"%s\">%.2f</td>" % (pb_ttm_now_color, pb_ttm_now)
             temp_html += "<td>%s</td>" % pb_ttm_percentage_5y
-            temp_html += "<td>%s</td>" % pb_ttm_percentage_10y
-            temp_html += "<td>%s</td>" % pb_ttm_percentage
+            if pb_ttm_percentage_10y_color == '':
+                temp_html += "<td>%s</td>" % pb_ttm_percentage_10y
+            else:
+                temp_html += "<td bgcolor=\"%s\">%s</td>" % (pb_ttm_percentage_10y_color, pb_ttm_percentage_10y)
+            if pb_ttm_percentage_color == '':
+                temp_html += "<td>%s</td>" % pb_ttm_percentage
+            else:
+                temp_html += "<td bgcolor=\"%s\">%s</td>" % (pb_ttm_percentage_color, pb_ttm_percentage)
+
             temp_html += "<td>%.2f</td>" % ps_ttm_now
             temp_html += "<td>%s</td>" % ps_ttm_percentage_5y
             temp_html += "<td>%s</td>" % ps_ttm_percentage_10y
