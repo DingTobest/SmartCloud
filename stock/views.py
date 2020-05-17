@@ -6,8 +6,8 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 
-from stock.index_analysis_service import index_analysis
 from stock.model.index_info_model import index_info
+from stock.service.index_analysis_service import index_analysis
 
 
 # Create your views here.
@@ -22,6 +22,7 @@ def add_stock_info(request):
     new_index_data_fund = add_info.get('index_data_fund')
     new_start_date = add_info.get('start_date')
     new_last_update_date = add_info.get('last_update_date')
+    new_data_source = add_info.get('data_source')
 
     str_start_date = new_start_date
     date_start_date = datetime.datetime.strptime(str_start_date, '%Y-%m-%d').date()
@@ -31,7 +32,8 @@ def add_stock_info(request):
     new_index_info = index_info.objects.create(index_code=new_index_code, index_name=new_index_name,
                                                index_data_table=new_index_data_table,
                                                index_data_fund=new_index_data_fund, start_date=new_start_date,
-                                               last_update_date=new_last_update_date)
+                                               last_update_date=new_last_update_date,
+                                               data_source=new_data_source)
 
     response = {}
     response['msg'] = 'success'

@@ -32,9 +32,13 @@ class index_analysis(object):
 
     def get_last_update_date(self):
         cursor = connection.cursor()
-        sql_str = 'select * from `' + self.index_code + '`'
-        index_analysis_df = pd.read_sql(sql_str, connection)
-        return index_analysis_df['trade_date'].iloc[-1]
+        # sql_str = 'select * from `' + self.index_code + '`'
+        # index_analysis_df = pd.read_sql(sql_str, connection)
+        # return index_analysis_df['trade_date'].iloc[-1]
+        sql_str = 'select max(trade_date) from `' + self.index_code + '`'
+        last_trade_date = pd.read_sql(sql_str, connection)
+        print(type(last_trade_date['max(trade_date)'][0]))
+        return last_trade_date['max(trade_date)'].iloc[0]
 
     def get_index_analysis_info(self):
         cursor = connection.cursor()

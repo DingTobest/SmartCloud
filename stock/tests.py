@@ -2,8 +2,8 @@ import datetime
 
 from django.test import TestCase
 
-from stock import index_info_service
 from stock.model.index_info_model import index_info
+from stock.service import index_info_service
 
 
 # Create your tests here.
@@ -21,7 +21,7 @@ class stock(TestCase):
         str_last_update_date = '2005-01-04'
         date_last_update_date = datetime.datetime.strptime(str_last_update_date, '%Y-%m-%d').date()
         new_index_info = index_info.objects.create(index_code='000016.XSHG', index_name='上证50指数', index_data_table='000016.XSHG',
-                            index_data_fund='', start_date=date_start_date, last_update_date=date_last_update_date)
+                            index_data_fund='', start_date=date_start_date, last_update_date=date_last_update_date, data_source="jqdata")
         print(new_index_info.index_code)
         print('add_index_info-执行结束')
 

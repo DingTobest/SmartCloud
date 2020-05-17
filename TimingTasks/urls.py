@@ -8,4 +8,5 @@ import TimingTasks.views
 
 urlpatterns = [
     url(r'calc_index_analysis_info', TimingTasks.views.calc_index_analysis_info, ),
+    url(r'download_index_stocks', TimingTasks.views.download_index_stocks, ),
 ]
