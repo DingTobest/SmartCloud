@@ -42,8 +42,8 @@ def call_calc_index_analysis_info():
     addr = host_address + '/timingtask/calc_index_analysis_info'
     r = requests.post(addr)
     if r.status_code == 200:
-        resutl = json.loads(r.text)
-        print(resutl['result'])
+        result = json.loads(r.text)
+        print(result['result'])
     else:
         raise Exception('更新每日数据接口【call_calc_index_analysis_info】调用失败')
 
