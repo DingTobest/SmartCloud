@@ -40,8 +40,8 @@ def get_index_stocks_from_cis(code, name):
     if os.path.exists(file_path):
         os.rename(file_path, mem_path)
 
-    if os.path.exists(file_path):
-        os.remove(file_path)
+    if os.path.exists(mem_path):
+        os.remove(mem_path)
         print('删除本次更新文件：' + mem_path)
 
 if __name__ == '__main__':
