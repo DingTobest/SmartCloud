@@ -41,11 +41,11 @@ def calc_index_analysis_info():
         analysis_date_list = trade_date_list
         # print(trade_date_list)
 
-        if len(analysis_date_list) == 0:
-            continue
-
         if analysis_date_list[0] == last_update_date:
             analysis_date_list = analysis_date_list[1:]
+
+        if len(analysis_date_list) == 0:
+            continue
 
         if analysis_date_list[-1] == datetime.date.today():
             analysis_date_list = analysis_date_list[:-1]

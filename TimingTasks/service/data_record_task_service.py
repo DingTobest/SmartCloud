@@ -40,9 +40,9 @@ def get_index_stocks_from_cis(code, name):
     if os.path.exists(file_path):
         os.rename(file_path, mem_path)
 
-    # if os.path.exists(file_path):
-    #     os.remove(file_path)
-    #     print('删除本次更新文件：' + mem_path)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        print('删除本次更新文件：' + mem_path)
 
 if __name__ == '__main__':
     get_index_stocks_from_cis('931087.CSI', '中证科技龙头指数')
