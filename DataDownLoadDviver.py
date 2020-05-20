@@ -22,5 +22,15 @@ def download_index_stocks():
     else:
         raise Exception('更新每日数据接口【download_index_stocks】调用失败')
 
+def download_download_cn_10year_bonds_yield():
+    addr = host_address + '/timingtask/download_bonds_yield'
+    r = requests.post(addr)
+    if r.status_code == 200:
+        result = json.loads(r.text)
+        print(result)
+    else:
+        raise Exception('更新每日数据接口【download_index_stocks】调用失败')
+
 if __name__ == '__main__':
     download_index_stocks()
+    download_download_cn_10year_bonds_yield()

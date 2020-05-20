@@ -7,8 +7,15 @@
 import requests
 import json
 import os
-
 import sys
+import base64
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.pylab import datestr2num
+
+plt.rcParams['font.family'] = ['sans-serif']
+plt.rcParams['font.sans-serif'] = ['SimHei']
 
 host_address = 'http://127.0.0.1:8000'
 
@@ -36,6 +43,8 @@ COLOR_VERY_LOW = '#00FF00'
 COLOR_LOW = '#F0E68C'
 COLOR_HIGH = '#87CEEB'
 COLOR_VERY_HIGH = '#FF4500'
+
+pic_base64 = "data:image/png;base64,"
 
 # 调用每日计算函数
 def call_calc_index_analysis_info():
@@ -224,6 +233,7 @@ def call_index_analysis_info_result():
         html_temp = f.read()
         f.close()
         email_html = html_temp.replace('#$%index_analysis_info#$%', html)
+        email_html = email_html.replace('#$%pic_base64#$%', pic_base64)
 
         if os.path.exists(sys.path[0] + '\\email-html-utf8.html'):
             os.remove(sys.path[0] + '\\email-html-utf8.html')
@@ -247,6 +257,50 @@ def call_index_analysis_info_result():
     else:
         raise Exception('获取指数信息【get_stock_info】调用失败')
 
+# 调用每日计算函数
+def get_bond_stocks_pe_infos():
+    addr = host_address + '/stock/get_stocks_bonds_pe'
+    r = requests.get(addr)
+    if r.status_code == 200:
+        result = json.loads(r.text)
+        pe_history = json.loads(result['pe_history'])
+        data = pd.DataFrame(pe_history)
+
+        data['bond_yield'] = 100 / data['bond_pe']
+        data['stock_yield'] = 100 / data['stocks_pe']
+
+        x = range(len(data))
+        x_date = [datestr2num(i) for i in data['trade_date']]
+        plt.style.use('ggplot')
+        plt.figure(figsize=(14, 4))
+        plt.title("10年期国债收益率与全市场股票收益率(%)")
+        plt.xticks(rotation=45)
+        plt.ylabel("收益率")
+        plt.plot_date(x_date, data['bond_yield'], '-', label="10年期国债收益率")
+        plt.plot_date(x_date, data['stock_yield'], '-', label="全市场股票收益率")
+        plt.legend()
+        plt.grid(True)
+
+        pic_path = sys.path[0] + '\\bond_stocks_yield.png'
+        if os.path.exists(pic_path):
+            os.remove(pic_path)
+            print('删除历史文件bond_stocks_yield.png')
+        print('生成图片：' + pic_path)
+        plt.savefig(pic_path)  # 保存图片
+
+        with open(pic_path, "rb") as f:
+            base64_data = base64.b64encode(f.read())
+            global pic_base64
+            pic_base64 = pic_base64 + str(base64_data)[2:-1]
+            print('将图片转化为base64')
+            print(pic_base64)
+    else:
+        raise Exception('更新每日数据接口【get_bond_stocks_pe_infos】调用失败')
+
 if __name__ == '__main__':
+    # 每日数据计算
     call_calc_index_analysis_info()
+    # 股债收益率
+    get_bond_stocks_pe_infos()
+    # 指数分析数据
     call_index_analysis_info_result()

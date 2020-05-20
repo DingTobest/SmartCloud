@@ -1,6 +1,7 @@
 import datetime
 import json
 import sys
+import pandas as pd
 
 from django.core import serializers
 from django.http import JsonResponse
@@ -8,6 +9,7 @@ from django.views.decorators.http import require_http_methods
 
 from stock.model.index_info_model import index_info
 from stock.service.index_analysis_service import index_analysis
+from stock.service import bond_cn_service
 
 
 # Create your views here.
@@ -88,3 +90,32 @@ def get_all_index_analysis_data(request):
     config = open(config_file_path, encoding='utf-8')
     index_analysis_info = json.load(config)
     return JsonResponse(index_analysis_info)
+
+@require_http_methods(["GET"])
+def get_stocks_bonds_pe(request):
+    response = {}
+
+    # 获取10年期国债PE月末数据
+    bond_df = bond_cn_service.get_bond_cn_10year_history_data()
+    bond_df.set_index('trade_date', inplace=True)
+    bond_df.index = pd.to_datetime(bond_df.index)
+    bond_df.sort_index(inplace=True)
+    bond_m = bond_df['pe_ttm'].resample('M').last()
+    bond_m.rename(columns={"pe_ttm": "bond_pe_ttm"})
+
+    # 获取全市场PE月末数据
+    indexAnalysis = index_analysis('qzzs.sc')
+    stocks_df = indexAnalysis.get_index_pe()
+    stocks_df.set_index('trade_date', inplace=True)
+    stocks_df.index = pd.to_datetime(stocks_df.index)
+    stocks_df.sort_index(inplace=True)
+    stocks_m = stocks_df['pe_ttm'].resample('M').last()
+    stocks_m.rename(columns={"pe_ttm": "stocks_pe_ttm"})
+
+    df = pd.DataFrame({'bond_pe':bond_m,'stocks_pe':stocks_m})
+    print(df)
+
+    df = df.reset_index()
+    df['trade_date'] = df['trade_date'].astype(str)
+    response['pe_history'] = df.to_json(orient="records",force_ascii=False)
+    return JsonResponse(response)

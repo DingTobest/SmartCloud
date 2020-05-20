@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'get_stock_info', stock.views.get_stock_info, ),
     url(r'get_index_analysis_info', stock.views.get_index_analysis_info, ),
     url(r'get_all_index_analysis_data', stock.views.get_all_index_analysis_data, ),
+    url(r'get_stocks_bonds_pe', stock.views.get_stocks_bonds_pe, ),
 ]

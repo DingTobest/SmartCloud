@@ -40,6 +40,11 @@ class index_analysis(object):
         print(type(last_trade_date['max(trade_date)'][0]))
         return last_trade_date['max(trade_date)'].iloc[0]
 
+    def get_index_pe(self):
+        sql_str = 'select trade_date, pe_ttm from `' + self.index_code + '`'
+        pe_df = pd.read_sql(sql_str, connection)
+        return pe_df
+
     def get_index_analysis_info(self):
         cursor = connection.cursor()
         sql_str = 'select * from `' + self.index_code + '`'
