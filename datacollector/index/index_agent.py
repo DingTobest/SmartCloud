@@ -1,5 +1,5 @@
 # encoding: utf-8
-from opendatatools.common import RestAgent
+from datacollector.common import RestAgent
 from bs4 import BeautifulSoup
 import json
 import pandas as pd

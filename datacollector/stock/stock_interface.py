@@ -3,7 +3,7 @@
 import datetime
 
 from .stock_agent import SHExAgent, SZExAgent, CSIAgent, XueqiuAgent, SinaAgent, CNInfoAgent, EastMoneyAgent
-from opendatatools.common import get_current_day
+from datacollector.common import get_current_day
 
 shex_agent   = SHExAgent()
 szex_agent   = SZExAgent()

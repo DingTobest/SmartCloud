@@ -2,7 +2,7 @@
 import pandas as pd
 import json
 import datetime
-from opendatatools.common import RestAgent
+from datacollector.common import RestAgent
 
 class CoinAgent(RestAgent):
 

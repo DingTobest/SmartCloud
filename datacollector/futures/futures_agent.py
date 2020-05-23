@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-from opendatatools.common import RestAgent, split_date, date_convert, remove_chinese
+from datacollector.common import RestAgent, split_date, date_convert, remove_chinese
 import pandas as pd
 import json
 import zipfile

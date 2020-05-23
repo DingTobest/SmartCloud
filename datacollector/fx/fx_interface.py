@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 from .chinamoney_agent import ChinaMoneyAgent
-from opendatatools.common import date_convert, get_current_day, get_target_date, get_target_date2
+from datacollector.common import date_convert, get_current_day, get_target_date, get_target_date2
 import pandas as pd
 
 chinamoney_agent = ChinaMoneyAgent()

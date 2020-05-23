@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 from .futures_agent import SHFAgent, DCEAgent, CZCAgent, CFEAgent, SinaFuturesAgent
-from opendatatools.common import get_target_date, date_convert
+from datacollector.common import get_target_date, date_convert
 
 shf_agent = SHFAgent()
 dce_agent = DCEAgent()

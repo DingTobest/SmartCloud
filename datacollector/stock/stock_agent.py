@@ -1,13 +1,13 @@
 # encoding: utf-8
 
-from opendatatools.common import RestAgent
-from opendatatools.common import date_convert, remove_non_numerical
+from datacollector.common import RestAgent
+from datacollector.common import date_convert, remove_non_numerical
 from bs4 import BeautifulSoup
 import datetime
 import json
 import pandas as pd
 import io
-from opendatatools.futures.futures_agent import _concat_df
+from datacollector.futures.futures_agent import _concat_df
 import zipfile
 
 def time_map(x):

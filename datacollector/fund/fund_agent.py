@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-from opendatatools.common import RestAgent
+from datacollector.common import RestAgent
 from progressbar import ProgressBar
 import demjson
 import json

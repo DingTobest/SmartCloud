@@ -1,4 +1,4 @@
-from opendatatools.common import RestAgent
+from datacollector.common import RestAgent
 import pandas as pd
 import json
 

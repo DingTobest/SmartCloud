@@ -5,7 +5,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from xml.etree import ElementTree
 
-from opendatatools.common import RestAgent
+from datacollector.common import RestAgent
 
 class SWIndexAgent(RestAgent):
     def __init__(self):
