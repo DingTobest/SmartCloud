@@ -50,7 +50,7 @@ def download_index_stocks(request):
             continue
 
         print('当前处理的指数为：' + index_info.index_code)
-        data_record_task_service.get_index_stocks_from_cis(index_info.index_code, index_info.index_name)
+        data_record_task_service.get_index_stocks_from_cis(index_info.index_code, index_info.index_name, str(analysis_date_list[-1]))
 
         update_code = update_code + ',' + index_info.index_code
 

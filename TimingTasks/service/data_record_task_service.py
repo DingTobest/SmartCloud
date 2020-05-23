@@ -8,10 +8,12 @@ import sys
 import os
 import pandas as pd
 from TimingTasks.service import index_stocks_service
+from util import date_util
 
 # 从中金所网站上爬取成分股数据
-def get_index_stocks_from_cis(code, name):
+def get_index_stocks_from_cis(code, name, trade_date):
     file_path = sys.path[0] + '\\TimingTasks\\downloadfile\\' + code + '.xls'
+    # file_path = 'D:\\SmartCloudFuture\\SmartCloud\\TimingTasks\\downloadfile\\' + code + '.xls'
     if os.path.exists(file_path):
         os.remove(file_path)
         print('删除旧的历史文件：' + file_path)
@@ -32,11 +34,17 @@ def get_index_stocks_from_cis(code, name):
     index_stocks_str = index_stocks_str.replace('.SHH', '.XSHG')
     index_stocks_str = index_stocks_str.replace('.SHZ', '.XSHE')
 
-    trade_date = df['日期Date'].iloc[0]
+    file_trade_date = df['日期Date'].iloc[0]
 
-    index_stocks_service.add_index_info(code, name, trade_date, index_stocks_str)
+    if file_trade_date == trade_date :
+        print('file_trade_date==>' + file_trade_date)
+        index_stocks_service.add_index_info(code, name, file_trade_date, index_stocks_str)
+    elif not date_util.check_Constituent_adjustment_day(trade_date):
+        print('trade_date==>' + trade_date)
+        index_stocks_service.add_index_info(code, name, trade_date, index_stocks_str)
 
-    mem_path = sys.path[0] + '\\TimingTasks\\downloadfile\\' + code + '.' + trade_date + '.xls'
+    # mem_path = 'D:\\SmartCloudFuture\\SmartCloud\\TimingTasks\\downloadfile\\' + code + '.' + file_trade_date + '.xls'
+    mem_path = sys.path[0] + '\\TimingTasks\\downloadfile\\' + code + '.' + file_trade_date + '.xls'
     if os.path.exists(file_path):
         os.rename(file_path, mem_path)
 
@@ -45,4 +53,5 @@ def get_index_stocks_from_cis(code, name):
         print('删除本次更新文件：' + mem_path)
 
 if __name__ == '__main__':
-    get_index_stocks_from_cis('931087.CSI', '中证科技龙头指数')
+    get_index_stocks_from_cis('931087.CSI', '中证科技龙头指数', '2020-05-22')
+    get_index_stocks_from_cis('990001.CSI', '中华半导体行业指数', '2020-05-22')

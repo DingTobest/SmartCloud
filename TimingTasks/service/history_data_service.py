@@ -20,6 +20,7 @@ def import_history_csv(table_name, csv_file_path):
     index_cp_df.drop('money', axis=1, inplace=True)
 
     engine = create_engine('mysql+pymysql://root:root@127.0.0.1/sc_stock?charset=utf8')
+    # engine = create_engine('mysql+pymysql://smartclouduser:zFiDx2@140.143.154.20/sc_stock?charset=utf8')
 
     drop_table_sql = "DROP TABLE IF EXISTS `%table_name%`;"
     create_table_sql = '''CREATE TABLE `%table_name%` (
@@ -54,6 +55,7 @@ def import_bond_history_csv(table_name, csv_file_path):
     index_cp_df.rename(columns={'Unnamed: 0': 'trade_date'}, inplace=True)
 
     engine = create_engine('mysql+pymysql://root:root@127.0.0.1/sc_stock?charset=utf8')
+    # engine = create_engine('mysql+pymysql://smartclouduser:zFiDx2@140.143.154.20/sc_stock?charset=utf8')
 
     drop_table_sql = "DROP TABLE IF EXISTS `%table_name%`;"
     create_table_sql = '''CREATE TABLE `%table_name%` (
@@ -86,6 +88,7 @@ def import_index_stocks_xlsx(index_code, index_name, xlsx_file_path):
     print(index_cp_df)
 
     engine = create_engine('mysql+pymysql://root:root@127.0.0.1/sc_stock?charset=utf8')
+    # engine = create_engine('mysql+pymysql://smartclouduser:zFiDx2@140.143.154.20/sc_stock?charset=utf8')
 
     # 存入数据库
     index_cp_df.to_sql('index_stocks', engine, if_exists='append', index=False)
