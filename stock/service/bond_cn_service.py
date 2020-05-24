@@ -18,11 +18,5 @@ def get_china_10year_bond_yield_data():
     df, msg = bond.get_china_10year_bond_yield_data()
     return df,msg
 
-    trade_date = models.DateField(null=False, primary_key=True)
-    open = models.DecimalField(max_digits=10, decimal_places=2)
-    high = models.DecimalField(max_digits=10, decimal_places=2)
-    low = models.DecimalField(max_digits=10, decimal_places=2)
-    close = models.DecimalField(max_digits=10, decimal_places=2)
-    pe_ttm = models.DecimalField(max_digits=10, decimal_places=2)
 def add_bond_cn_10year_yield_date(trade_date, open, high, low, close, pe_ttm):
     return bond_cn_10year.objects.create(trade_date=trade_date, open=open, high=high,low=low, close=close,pe_ttm=pe_ttm)
